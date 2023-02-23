@@ -1,0 +1,128 @@
+algorithm
+
+1. Initialize two variables, max and min, to the first element in the array
+2. Loop through the remaining elements in the array:
+    a. If the current element is greater than the current max value, update max to the current element
+    b. If the current element is less than the current min value, update min to the current element
+3. After looping through all elements, max and min will contain the maximum and minimum values in the array, respectively
+4. Return or print out max and min
+
+Time 
+
+At every step of the loop, we are doing 2 comparisons in the worst case. Total no. of comparisons (in worst case) = 2*(n-1) = 2n - 2
+Time complexity = O(n), Space complexity = O(1)
+In the best case, a total of n-1 comparisons have been made
+
+Output 
+The maximum element in the array is: 9
+The minimum element in the array is: 1
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int arr[5] = {5, 3, 8, 1, 9};
+    int n = 5;
+    int max = arr[0]; // initialize max to the first element in the array
+    int min = arr[0]; // initialize min to the first element in the array
+
+    for (int i = 1; i < n; i++) {
+        if (arr[i] > max) {
+            max = arr[i];
+        }
+        if (arr[i] < min) {
+            min = arr[i];
+        }
+    }
+
+    printf("The maximum element in the array is: %d\n", max);
+    printf("The minimum element in the array is: %d\n", min);
+
+    return 0;
+}
+
+
+
+
+
+Convex hull problem 
+
+1. Find the point with the lowest y-coordinate (if tie, choose the one with the lowest x-coordinate), which must be on the hull.
+2. Sort the remaining points by polar angle in counterclockwise order with respect to the lowest point.
+3. Push the first three points onto a stack.
+4. For each remaining point:
+   a. While the angle between the last two points on the stack and the current point makes a clockwise turn, pop the top point off the stack.
+   b. Push the current point onto the stack.
+5. The stack now contains the points on the convex hull, in counterclockwise order.
+
+Time 
+The time complexity of the Graham Scan algorithm is O(n log n), where n is the number of input points.
+
+
+Output 
+(0, 3)
+(4, 4)
+(0, 0)
+(3, 1)
+
+
+Code 
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct point {
+    int x;
+    int y;
+};
+
+int orientation(struct point p, struct point q, struct point r) {
+    int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+    if (val == 0) return 0;  // collinear
+    return (val > 0) ? 1 : 2; // clock or counterclock wise
+}
+
+void convexHull(struct point points[], int n) {
+    if (n < 3) return;
+
+    int hull[n];
+    for (int i = 0; i < n; i++)
+        hull[i] = -1;
+
+    int l = 0;
+    for (int i = 1; i < n; i++) {
+        if (points[i].x < points[l].x)
+            l = i;
+    }
+
+    int p = l, q;
+    do {
+        hull[p] = 1;
+        q = (p + 1) % n;
+        for (int i = 0; i < n; i++) {
+            if (orientation(points[p], points[i], points[q]) == 2)
+                q = i;
+        }
+        p = q;
+    } while (p != l);
+
+    for (int i = 0; i < n; i++) {
+        if (hull[i] == 1) {
+            printf("(%d, %d)\n", points[i].x, points[i].y);
+        }
+    }
+}
+
+int main() {
+    struct point points[] = {{0, 3}, {1, 1}, {2, 2}, {4, 4},
+                             {0, 0}, {1, 2}, {3, 1}, {3, 3}};
+    int n = sizeof(points)/sizeof(points[0]);
+    convexHull(points, n);
+    return 0;
+}
+
+
