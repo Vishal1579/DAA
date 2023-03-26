@@ -1,0 +1,95 @@
+TIME COMPLEXITY 
+
+O(N!)
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+ALGORITHM 
+
+Initialize an empty N x N chess board.
+If the number of queens to place is 0, return true (success).
+For each row i, from 0 to N-1:
+a. For each column j, from 0 to N-1:
+i. If there is no queen attacking position (i,j), place a queen at (i,j).
+ii. Recursively try to place the remaining queens on the board, starting from the next row (i+1).
+iii. If the placement of remaining queens is successful, return true.
+iv. If the placement is unsuccessful, remove the queen from (i,j) and continue to the next column.
+If no placement in any row is successful, return false (failure).
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CODE 
+
+#include <stdio.h>
+#define N 8
+
+int board[N][N];
+
+int is_attack(int i,int j) {
+    int k,l;
+    for(k=0;k<N;k++) {
+        if((board[i][k] == 1) || (board[k][j] == 1))
+            return 1;
+    }
+    for(k=0;k<N;k++) {
+        for(l=0;l<N;l++) {
+            if(((k+l) == (i+j)) || ((k-l) == (i-j))) {
+                if(board[k][l] == 1)
+                    return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+int N_queen(int n) {
+    int i,j;
+    if(n==0)
+        return 1;
+    for(i=0;i<N;i++) {
+        for(j=0;j<N;j++) {
+            if(!is_attack(i,j) && board[i][j]!=1) {
+                board[i][j] = 1;
+                if(N_queen(n-1)==1) {
+                    return 1;
+                }
+                board[i][j] = 0;
+            }
+        }
+    }
+    return 0;
+}
+
+int main() {
+    int i,j;
+    for(i=0;i<N;i++) {
+        for(j=0;j<N;j++) {
+            board[i][j]=0;
+        }
+    }
+    N_queen(N);
+    for(i=0;i<N;i++) {
+        for(j=0;j<N;j++) {
+            printf("%d ",board[i][j]);
+        }
+        printf("\n");
+    }
+    return 0;
+}
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+OUTPUT 
+
+
+1 0 0 0 0 0 0 0 
+0 0 0 0 1 0 0 0 
+0 0 0 0 0 0 0 1 
+0 0 0 0 0 1 0 0 
+0 0 1 0 0 0 0 0 
+0 0 0 0 0 0 1 0 
+0 1 0 0 0 0 0 0 
+0 0 0 1 0 0 0 0 
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
