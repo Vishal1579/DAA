@@ -1,0 +1,80 @@
+
+ALGORITHM
+
+
+​​Start at any city
+Find the nearest unvisited city from the current city
+Move to the nearest unvisited city
+Mark the nearest unvisited city as visited
+Repeat steps 2-4 until all cities have been visited
+Return to the starting city
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Time complexity
+​​O(N^3)
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE 
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+#define N 4  // Number of cities
+#define INF 999999 // Infinity
+
+int main() {
+    int graph[N][N] = { {0, 10, 15, 20},
+                        {10, 0, 35, 25},
+                        {15, 35, 0, 30},
+                        {20, 25, 30, 0} }; // Graph representation of distances between cities
+
+    int visited[N] = {0}; // Mark all cities as unvisited
+    int start = 0; // Start from city 0
+    int current = start;
+    visited[start] = 1; // Mark the starting city as visited
+    int min_distance = 0; // Total distance traveled so far
+    printf("%d ", current); // Print the starting city
+
+    for (int i = 0; i < N-1; i++) {
+        int next_city = -1; // Initialize the next city to visit
+        int min_distance_to_next = INF; // Initialize the minimum distance to the next city to infinity
+
+        // Find the nearest unvisited city
+        for (int j = 0; j < N; j++) {
+            if (!visited[j] && graph[current][j] < min_distance_to_next) {
+                next_city = j;
+                min_distance_to_next = graph[current][j];
+            }
+        }
+
+        // Mark the nearest city as visited and update the total distance traveled
+        visited[next_city] = 1;
+        min_distance += min_distance_to_next;
+        current = next_city;
+        printf("%d ", current); // Print the visited city
+    }
+
+    // Return to the starting city and print the total distance traveled
+    printf("%d\n", start);
+    min_distance += graph[current][start];
+    printf("Minimum distance: %d\n", min_distance);
+
+    return 0;
+}
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Output 
+
+0 1 3 2 0
+Minimum distance: 80
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
