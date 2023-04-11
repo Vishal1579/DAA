@@ -1,0 +1,155 @@
+FOR BFS SEARCH WITH ARRAY 
+
+
+
+ALGORITHM
+
+Create an array visited of size N (where N is the number of nodes in the graph) and initialize all elements to false.
+Create a queue Q.
+Enqueue the starting node s into Q.
+Set visited[s] to true.
+While Q is not empty:
+Dequeue a node v from Q.
+Process v (in this case, add it to a result list or print it).
+For each unvisited neighbor w of v:
+Enqueue w into Q.
+Set visited[w] to true.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE 
+
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAX_NODES 100
+
+void bfs(int graph[][MAX_NODES], int start, int num_nodes) {
+    bool visited[MAX_NODES] = { false };  // create an array of visited nodes, initialized to false
+    int queue[MAX_NODES] = { 0 };  // create a queue for BFS
+    int front = 0, rear = 0;  // initialize front and rear of queue
+
+    queue[rear++] = start;  // enqueue the starting node
+    visited[start] = true;  // mark the starting node as visited
+
+    while (front < rear) {
+        int node = queue[front++];  // dequeue a node from the queue
+        printf("%d ", node);  // process the node (in this case, just print it)
+
+        // add unvisited neighbors of the current node to the queue
+        for (int i = 0; i < num_nodes; i++) {
+            if (graph[node][i] && !visited[i]) {
+                queue[rear++] = i;
+                visited[i] = true;  // mark the neighbor as visited
+            }
+        }
+    }
+}
+
+int main() {
+    int graph[][MAX_NODES] = {
+        {0, 1, 1, 0},
+        {1, 0, 1, 1},
+        {1, 1, 0, 1},
+        {0, 1, 1, 0}
+    };
+    int num_nodes = 4;
+
+    bfs(graph, 0, num_nodes);  // start BFS from node 0
+
+    return 0;
+}
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+OUTPUT 
+
+0 1 2 3
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+TIME COMPLEXITY 
+
+In the best case, the graph is a tree (i.e., a connected acyclic graph) rooted at the starting node. In this case, BFS will visit each node exactly 
+once, and the time complexity is O(N), where N is the number of nodes in the graph.
+
+In the worst case, the graph is a dense graph (i.e., a graph where E is close to N^2). 
+In this case, BFS will visit each node and each edge exactly once, and the time complexity is O(N^2), where N is the number of nodes in the graph.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+DFS SEARCH WITH ARRAY 
+
+
+ALGORIHM 
+
+
+Initialize a boolean array visited of size N, where N is the number of nodes in the graph, to keep track of which nodes have been visited. 
+Set all elements to false.
+Initialize an array adj_list of size NxN to represent the graph as an adjacency matrix. Set adj_list[i][j] = 1 
+if there is an edge from node i to node j, and adj_list[i][j] = 0 otherwise.
+Define a function dfs(node) that takes a node as an argument and performs the DFS traversal starting from that node:
+a. Mark the current node as visited by setting visited[node] = true.
+b. Process the current node (e.g., print it).
+c. Recursively process the unvisited neighbors of the current node. For each neighbor i of node node, if adj_list[node][i] = 1 
+and visited[i] = false, call dfs(i).
+Perform DFS from each unvisited node in the graph. For each node i in the graph, if visited[i] = false, call dfs(i).
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CODE 
+
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAX_NODES 1000
+
+bool visited[MAX_NODES];  // array to keep track of visited nodes
+int adj_list[MAX_NODES][MAX_NODES];  // adjacency list representation of the graph
+int num_nodes;  // number of nodes in the graph
+
+void dfs(int node) {
+    visited[node] = true;  // mark the current node as visited
+    printf("%d ", node);  // process the current node (print it)
+    
+    // recursively process the unvisited neighbors of the current node
+    for (int i = 0; i < num_nodes; i++) {
+        if (adj_list[node][i] && !visited[i]) {
+            dfs(i);
+        }
+    }
+}
+
+int main() {
+    // read in the graph (number of nodes and adjacency matrix)
+    scanf("%d", &num_nodes);
+    for (int i = 0; i < num_nodes; i++) {
+        for (int j = 0; j < num_nodes; j++) {
+            scanf("%d", &adj_list[i][j]);
+        }
+    }
+    
+    // perform DFS from each unvisited node
+    for (int i = 0; i < num_nodes; i++) {
+        if (!visited[i]) {
+            dfs(i);
+        }
+    }
+    
+    return 0;
+}
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+OUTPUT 
+
+7,2,9,6,
+0 1 2 3 4 5 6 
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+TIME COMPLEXITY 
+
+The time complexity of DFS using an array to represent the graph is O(N^2), where N is the number of nodes in the graph.
+
+In the worst case, we need to visit each node and each edge exactly once, so the total number of operations is 
+proportional to the number of nodes N times the number of edges N (i.e., O(N^2)). 
+This is because we need to check whether each pair of nodes is connected by an edge by examining each element in the adjacency matrix.
+
